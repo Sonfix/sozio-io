@@ -10,10 +10,12 @@ import {
     FormLabel,
     Input,
     Button,
-    useDisclosure
+    useDisclosure,
+    NumberInput,
+    NumberInputField,
+    Select
   } from '@chakra-ui/react'
-  import React, { useRef } from "react";
-
+import React, { useRef } from "react";
 
 export default function Add_Child_Modal(props) {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -24,14 +26,14 @@ export default function Add_Child_Modal(props) {
 
     function save() {
         const obj = {
-            name: name,
-            age: age,
-            gender: gender
+            name: name.current.value,
+            age: age.current.value,
+            gender: gender.current.value  
         }
-        onClose(obj)
+        close(obj)
     }
 
-    function Close(data) {
+    function close(data) {
         props?.onClose(data);
         onClose()
     }
@@ -40,10 +42,8 @@ export default function Add_Child_Modal(props) {
       <>
  
         <Modal
-          initialFocusRef={props?.initialRef}
-          finalFocusRef={props?.finalRef}
-          isOpen={isOpen}
-          onClose={() => save()}
+          isOpen={props?.isOpen}
+          onClose={() => close(null)}
         >
           <ModalOverlay />
           <ModalContent>
@@ -52,17 +52,23 @@ export default function Add_Child_Modal(props) {
             <ModalBody pb={6}>
                 <FormControl>
                     <FormLabel>Name</FormLabel>
-                    <Input inputRef={name} placeholder='Name' />
+                    <Input ref={name} placeholder='Name' />
                 </FormControl>
   
                 <FormControl mt={4}>
                     <FormLabel>Alter</FormLabel>
-                    <Input inputRef={age} placeholder='Alter' />
+                    <NumberInput allowMouseWheel>
+                      <NumberInputField ref={age}/>
+                    </NumberInput>
                 </FormControl>
   
                 <FormControl mt={4}>
                     <FormLabel>Geschlecht</FormLabel>
-                    <Input inputRef={gender} placeholder='Geschlecht' />
+                      <Select ref={gender} placeholder={"Geschlecht"}>
+                        <option value='Männlich'>Männlich</option>
+                        <option value='Weiblich'>Weiblich</option>
+                        <option value='Divers'>Divers</option>
+                    </Select>
                 </FormControl>
             </ModalBody>
   
@@ -70,7 +76,7 @@ export default function Add_Child_Modal(props) {
               <Button colorScheme='teal' mr={3} onClick={() => save()}>
                 Speichern
               </Button>
-              <Button onClick={() => Close(null)}>Abbrechen</Button>
+              <Button onClick={() => close(null)}>Abbrechen</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

@@ -15,10 +15,13 @@ import { store } from "../../APIs/firebase"
 import { addDoc, doc, collection, serverTimestamp } from 'firebase/firestore';
 import cryptoJs from 'crypto-js';
 import Base64 from 'crypto-js/enc-base64';
+import { useNavigate  } from "react-router-dom";
 
 export default function Welcomming(props) {
   const { currentUser, currentDiagramms } = useAuth()
-  
+  let navigation = useNavigate ();
+
+
   function change_type(data) {
     props?.changeType(data)
   }
@@ -68,7 +71,7 @@ export default function Welcomming(props) {
         >
         <Button colorScheme='teal' onClick={() => firestore_test()}>Firestore test</Button>
         {!currentUser && <Button colorScheme='teal' onClick={() => change_type("LogIn")}>Los geht's</Button>}
-        {currentUser  && <Button colorScheme='teal' onClick={() => change_type("LogIn")}>Zur Anwendung</Button>}
+        {currentUser  && <Button colorScheme='teal' onClick={() => navigation("/app", { replace: true })}>Zur Anwendung</Button>}
         </Center>
         </GridItem>
         <GridItem colSpan={2}>
