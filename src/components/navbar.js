@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -11,15 +10,20 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import {useAuth} from "../../contexts/AuthContext"
+import {useAuth} from "../contexts/AuthContext"
+import ColorModeSwitcher from "../ColorModeSwitcher"
 
-const Links = [];
+const Links = [
+  {
+    desc: "Home",
+    lk: "/"
+  }
+];
 
 const NavLink = ({ children }) => (
   <Link
@@ -30,8 +34,8 @@ const NavLink = ({ children }) => (
       textDecoration: 'none',
       bg: useColorModeValue('teal.200', 'teal.700'),
     }}
-    href={'#'}>
-    {children}
+    href={children.lk}>
+    {children.desc}
   </Link>
 );
 
@@ -64,6 +68,7 @@ export default function NavBar() {
           </HStack>
           {currentUser && 
             <Flex alignItems={'center'}>
+              <ColorModeSwitcher />
               <Menu>
                 <MenuButton
                   as={Button}

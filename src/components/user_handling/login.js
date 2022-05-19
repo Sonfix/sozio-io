@@ -13,15 +13,12 @@ import {
   FormControl,
   FormHelperText,
   InputRightElement,
-  Spinner,
-  CloseButton,
   IconButton,
   useToast
 } from "@chakra-ui/react";
+import { CloseIcon } from '@chakra-ui/icons'
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
-import { store } from "../../APIs/firebase";
-import { addDoc, doc, collection, serverTimestamp } from 'firebase/firestore';
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -38,7 +35,7 @@ export default function LogIn(props) {
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser, retrive_user_document } = useAuth();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handle_switch_to_signup = (data) => {
@@ -88,23 +85,6 @@ export default function LogIn(props) {
         console.log(error);
       }
     }
-
-    // get user data from the auth trigger
-    const userUid = currentUser.uid; // The UID of the user.
-    const email = currentUser.email; // The email of the user.
-    const displayName = currentUser.displayName; // The display name of the user.
-
-    // set account  doc  
-    const account = {
-      useruid: userUid,
-      calendarEvents: []
-    }  
-    // collection(store, "user-test").doc(userUid).set(account)
-    // const docRef = await addDoc(collection(store, "diagramms"), {
-    //     owner: currentUser.uid,
-    //     createdAt: serverTimestamp()
-    //   });
-    // console.log(retrive_user_document()) 
     setLoading(false);
   }
 
@@ -139,7 +119,7 @@ export default function LogIn(props) {
               colorScheme={"red"}
               aria-label={"Schließen"}
               onClick={() => handle_switch_to_signup("Text")}
-              icon={<CloseButton />}
+              icon={<CloseIcon />}
             />
           </Box>
         </Box>
@@ -189,10 +169,11 @@ export default function LogIn(props) {
                 variant="solid"
                 colorScheme="teal"
                 width="full"
-                disabled={loading}
+                isLoading={loading}
+                spinnerPlacement='end'
+                loadingText='Anmelden'
               >
-                {!loading && "Anmelden"}
-                {loading && <Spinner />}
+                Anmelden
               </Button>
             </Stack>
           </form>

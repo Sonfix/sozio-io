@@ -12,12 +12,10 @@ import {
   Link,
   FormControl,
   InputRightElement,
-  Spinner,
-  CloseButton,
   IconButton,  
   useToast
 } from "@chakra-ui/react";
-
+import { CloseIcon } from '@chakra-ui/icons'
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -122,9 +120,8 @@ function Signup(props) {
               colorScheme={"red"}
               aria-label={"Schließen"}
               onClick={() => handle_switch_to_login("Text")}
-            >
-              <CloseButton />
-            </IconButton>
+              icon={<CloseIcon />}
+            />
           </Box>
         </Box>
         <Heading color="teal.400">Hallo!</Heading>
@@ -193,10 +190,11 @@ function Signup(props) {
                 variant="solid"
                 colorScheme="teal"
                 width="full"
-                disabled={loading}
+                isLoading={loading}
+                spinnerPlacement='end'
+                loadingText='Anmelden'
               >
-                {!loading && "Anmelden"}
-                {loading && <Spinner />}
+                Anmelden
               </Button>
             </Stack>
           </form>

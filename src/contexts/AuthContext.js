@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
-import { auth, store } from "../APIs/firebase"
+import { auth } from "../APIs/firebase"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc, collection, serverTimestamp, getDocs,  query, where } from 'firebase/firestore';
+
 
 const AuthContext = React.createContext()
 
@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [currentDiagramms, setCurrentDiagramm] = useState()
   const [loading, setLoading] = useState(true)
-
   function signup(email, password) {
     return createUserWithEmailAndPassword(auth, email, password)
   }
@@ -38,18 +37,6 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password)
   }
 
-  async function retrive_users_documents(user) {
-    const q = query(collection(store, "diagramms"), where("owner", "==", user.uid));
-
-    const querySnapshot = await getDocs(q);
-    
-    let _docs = []
-    querySnapshot.forEach((doc) => {
-      _docs.push(doc.data())      
-    });
-    setCurrentDiagramm(_docs)
-  }
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
@@ -61,13 +48,12 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    currentDiagramms,
     login,
     signup,
     logout,
     resetPassword,
     updateEmail,
-    updatePassword
+    updatePassword,
   }
 
   return (

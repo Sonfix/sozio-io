@@ -10,15 +10,13 @@ import {
     FormLabel,
     Input,
     Button,
-    useDisclosure,
     NumberInput,
     NumberInputField,
     Select
   } from '@chakra-ui/react'
 import React, { useRef } from "react";
 
-export default function Add_Child_Modal(props) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+export default function AddChildModal(props) {
 
     const name = useRef();
     const age = useRef();
@@ -35,7 +33,6 @@ export default function Add_Child_Modal(props) {
 
     function close(data) {
         props?.onClose(data);
-        onClose()
     }
 
     return (
