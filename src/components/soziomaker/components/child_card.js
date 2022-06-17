@@ -5,8 +5,10 @@ import {
     Text,
     Stack,
     useColorModeValue,
+    Avatar,
   } from '@chakra-ui/react';
-  
+
+ 
   export default function ChildCard(props) {
 
     return (
@@ -28,20 +30,23 @@ import {
           >
   
           <Box p={6}>
+            <Center>
+              <Avatar size={"lg"} bg={props.data.color}/>
+            </Center>
             <Stack spacing={0} align={'center'} mb={5}>
               <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
                 {props.data.name}
               </Heading>
             </Stack>
   
-            <Stack justify={'center'} spacing={6}>
+            <Stack justify={'center'}>
               <Stack spacing={0} align={'center'}>
                 <Text fontWeight={600}>Alter</Text>
                 <Text fontSize={'sm'} color={'gray.500'}>
                   {props.data.age}
                 </Text>
               </Stack>
-              <Stack spacing={0} align={'center'}>
+              <Stack marginTop={0} spacing={0} align={'center'}>
                 <Text fontWeight={600}>Geschlecht</Text>
                 <Text fontSize={'sm'} color={'gray.500'}>
                   {props.data.gender}

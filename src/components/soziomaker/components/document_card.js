@@ -5,7 +5,7 @@ import {
     Stack,
     useColorModeValue,
   } from '@chakra-ui/react';
-
+import { useEffect, useRef } from 'react';
 import { useDocContext } from "../../../contexts/DocumentContext"
   
   export default function DocumentCard(props) {
@@ -17,6 +17,7 @@ import { useDocContext } from "../../../contexts/DocumentContext"
       setCurrentDocument(props.id);
       props?.onClick()
     }
+
 
     return (
         <Box
@@ -34,11 +35,12 @@ import { useDocContext } from "../../../contexts/DocumentContext"
           <Box p={6}>
             <Stack spacing={0} align={'center'} mb={5}>
               <Image
-                rounded={'md'}
-                w={"150px"}
-                src='https://bit.ly/dan-abramov'
-                alt='Dan Abramov'>
-              </Image>
+                objectFit='cover'
+                boxSize={"150px"}
+                src= {process.env.PUBLIC_URL + '/thumbnail.png'}
+                alt='Thumbnail'
+              >
+              </Image>              
             </Stack>
   
             <Stack justify={'center'} spacing={6}>

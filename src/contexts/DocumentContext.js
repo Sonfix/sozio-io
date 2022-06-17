@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 
 
 const default_document = {
-    createdAt: "16:31 17.05.2022",
+    createdAt: Date.now(),
     title: "Default",
     owner: "",
     cnt_id: "",
@@ -163,10 +163,13 @@ export function DocumentProvider({ children }) {
     }
 
     function updateDocument(document) {
+        document.last_edited = Date.now()
         setCurrentDoc(document)
+        
+        localStorage.setItem("currentDocument", JSON.stringify(document));
         Documents.forEach(doc => {
             if (doc.cnt_id === document.cnt_id) {
-                doc = document
+                doc.rw_data = document.rw_data
             }
         });
         localStorage.setItem("documents", JSON.stringify(Documents));

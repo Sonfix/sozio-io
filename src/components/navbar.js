@@ -13,6 +13,7 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Img,
 } from '@chakra-ui/react';
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import {useAuth} from "../contexts/AuthContext"
@@ -22,6 +23,10 @@ const Links = [
   {
     desc: "Home",
     lk: "/"
+  },
+  {
+    desc: "About",
+    lk:"/about"
   }
 ];
 
@@ -46,7 +51,7 @@ export default function NavBar() {
 
   return (
     <>
-      <Box bg={useColorModeValue('teal.400', 'teal.900')} px={4}>
+      <Box bg={useColorModeValue('teal.400', 'teal.600')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -56,7 +61,12 @@ export default function NavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
+            <Box>                
+              <Img
+                boxSize='50px'
+                src={'logo512.png'}
+              />
+            </Box>
             <HStack
               as={'nav'}
               spacing={4}

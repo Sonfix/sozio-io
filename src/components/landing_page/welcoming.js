@@ -56,9 +56,9 @@ export default function Welcomming(props) {
         <GridItem colSpan={2}>
           <Center>
               <Image
-                borderRadius='full'
-                w={"150px"}
-                src='https://bit.ly/dan-abramov'
+                borderRadius='25px'
+                boxSize='250px'
+                src= {process.env.PUBLIC_URL + '/thumbnail.png'}
                 alt='Dan Abramov'
               />
           </Center>

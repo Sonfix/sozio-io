@@ -58,10 +58,10 @@ export default function DocumentDrawer(props) {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
-              Cancel
+            <Button colorScheme='teal' mr={3} onClick={() => onNew()}>Neu</Button>
+            <Button variant='outline'  onClick={onClose}>
+              Abbrechen
             </Button>
-            <Button colorScheme='teal' onClick={() => onNew()}>Neu</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

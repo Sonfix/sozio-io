@@ -8,6 +8,7 @@ import { AuthProvider } from './contexts/AuthContext';
 // import PrivateRoute from './components/utils/PrivateRoute';
 import LandingPage from './components/landing_page';
 import SozioMaker from './components/soziomaker';
+import AboutPage from "./components/about"
 import { DocumentProvider } from './contexts/DocumentContext';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<LandingPage />}></Route>
                 <Route exact path='/app' element={<SozioMaker />}></Route>
+                <Route exact path='/about' element={<AboutPage />}></Route>
               </Routes>
             </DocumentProvider>
           </AuthProvider>

@@ -9,27 +9,112 @@ import {
   IconButton,
   useColorModeValue
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, LinkIcon } from '@chakra-ui/icons'
 import Navbar from '../navbar'
 import AddChildModal from './components/add_child_modal';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DocumentDrawer from './components/document_drawer';
 import { useDocContext } from '../../contexts/DocumentContext';
 import ChildCard from "./components/child_card"
-import MakeRelations from './components/make_realtions';
+import MakeRelations from './components/realtions/make_realtions';
+import { FaWindowRestore } from 'react-icons/fa';
+import SozioGramm from './components/graphical';
+
 
 export default function SozioMaker() {
   const [ modal, showModal ] = useState(false)
+  const [ modalData, setModalData ] = useState( );
   const [ makeRelations, showmakeRelations ] = useState(false)
   const [ openDrawer, setOpenDrawer ] = useState(false)
   const { getDocuments, currentDocument, updateDocument } = useDocContext();
 
+  console.log("Render")
+  useEffect(() => {
+    console.log("Index onMount")
+  },[])
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+
+  const getChildById = (id) => {
+    for (let index = 0; index < currentDocument.rw_data.Childs.length; index++) {
+        const element = currentDocument.rw_data.Childs[index];
+        if (element.id === id) {
+            return element;
+        }
+    }
+    
+    return null;
+}
+
+  function processGraphicalData() {
+    // first nodes
+    let nodes = []
+    currentDocument.rw_data.Childs.forEach(child => {
+      nodes.push({
+        "id": child.name,
+        "color": child.color       
+      })
+    });
+
+    let links = []
+    currentDocument.rw_data.Relations.forEach(relataion => {
+      let source = getChildById(relataion.ChildId);
+      
+      relataion.affected.forEach(t_id => {
+        let target = getChildById(t_id);
+        links.push({
+          "source": source.name,
+          "target": target.name,
+          "type": "Zuneigung"
+        })
+      }) 
+      relataion.aversion.forEach(t_id => {
+        let target = getChildById(t_id);
+        links.push({
+          "source": source.name,
+          "target": target.name,
+          "type": "Abneigung"
+        })
+      }) 
+    })
+
+    const d = {
+      "nodes": nodes,
+      "links": links
+    }
+    console.log("Datalog: ", d)
+    return d
+  }
+  
+
   function onModalClose(data) {
     showModal(false)
-    console.log(currentDocument)
+
     if (data) {
-      data.id = currentDocument.rw_data.Childs.length + 1
-      currentDocument.rw_data.Childs.push(data)
+      if (data.id === -1) {
+        data.id = currentDocument.rw_data.Childs.length + 1
+        data.color = getRandomColor();
+        currentDocument.rw_data.Childs.push(data)
+      }
+      else {
+        currentDocument.rw_data.Childs.forEach(child => {
+          if (child.id === data.id) {
+           child.name = data.name;
+           child.age = data.age;
+           child.gender = data.gender;
+           if (!child.color)
+            child.color = getRandomColor()
+          }
+        });
+      }
       updateDocument(currentDocument);
     }
   }
@@ -38,9 +123,9 @@ export default function SozioMaker() {
     showModal(true)
   }
 
-  function onClick(e) {
-    console.log(e)
-    onOpenModalRelation();
+  function onClick(child) {
+    setModalData(child)
+    showModal(true)
   }
 
   function onDocumentDrawerClose() {
@@ -57,6 +142,12 @@ export default function SozioMaker() {
 
   function onRelationClose() {
     showmakeRelations(false)
+  }
+
+  function setSVGData(svg) {
+    currentDocument.rw_data.svg = svg.innerHTML;
+    // console.log(currentDocument.rw_data)
+    updateDocument(currentDocument)
   }
 
   return (
@@ -96,32 +187,54 @@ export default function SozioMaker() {
                       <ChildCard 
                         key={child.id} 
                         data={child}
-                        onClick={onClick}
+                        onClick={() => onClick(child)}
                       />
                     </Center>
                   )
                 })}
               </Stack>
             </Stack>
-            <Stack w={"full"} h={"full"}>
-            <IconButton 
-                aria-label='Kind hinzufügen' 
-                icon={<AddIcon />} 
-                borderRadius={"100px"}
-                w={"25px"} 
-                colorScheme={"teal"}
-                onClick={() => onShowModal()}
-                boxShadow={'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;'}
-                zIndex={"2"}  
+            <Box w={"full"} h={"full"}>
+            <SozioGramm data={processGraphicalData()} setSVGData={setSVGData}/>
+              <Stack
+                top={"80%"}
+                zIndex={"2"}
                 position={"fixed"}
                 m={"25px"}
-                top={"90%"}
-              />
-            </Stack>
+              >
+              <IconButton 
+                  aria-label='Dokumenten ablage' 
+                  icon={<FaWindowRestore />} 
+                  borderRadius={"100px"}
+                  size={"sm"} 
+                  colorScheme={"teal"}
+                  onClick={() => onOpenDrawerClick()}
+                  boxShadow={'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;'}
+                />
+              <IconButton 
+                  aria-label='Soziomatrix' 
+                  icon={<LinkIcon />} 
+                  borderRadius={"100px"}
+                  size={"sm"} 
+                  colorScheme={"teal"}
+                  onClick={() => onOpenModalRelation()}
+                  boxShadow={'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;'}
+                />
+              <IconButton 
+                  aria-label='Kind hinzufügen' 
+                  icon={<AddIcon />} 
+                  borderRadius={"100px"}
+                  size={"lg"} 
+                  colorScheme={"teal"}
+                  onClick={() => onShowModal()}
+                  boxShadow={'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;'}
+                />
+              </Stack>
+            </Box>
           </Flex>
         </Container>
         
-        {modal && <AddChildModal onClose={(data) => onModalClose(data)} isOpen={modal}/>}
+        {modal && <AddChildModal onClose={(data) => onModalClose(data)} isOpen={modal} data={modalData} />}
         {makeRelations && <MakeRelations onClose={() => onRelationClose()} isOpen={makeRelations} />}
         {(openDrawer || !currentDocument ) && <DocumentDrawer isOpen={(openDrawer || !currentDocument )} onClose={onDocumentDrawerClose} data={getDocuments()}/>}
       </Box>

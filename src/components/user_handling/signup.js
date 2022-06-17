@@ -194,7 +194,7 @@ function Signup(props) {
                 spinnerPlacement='end'
                 loadingText='Anmelden'
               >
-                Anmelden
+                Registrieren
               </Button>
             </Stack>
           </form>

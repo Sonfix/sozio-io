@@ -2,9 +2,6 @@ import {
     Box,
     useColorModeValue,
   } from '@chakra-ui/react';
-import Login from '../user_handling/login';
-import Signup from '../user_handling/signup';
-import Welcomming from './welcoming';
 import { useState } from "react";
 
 export default function Content() {
@@ -17,9 +14,6 @@ export default function Content() {
     return (
       <Box bg={useColorModeValue('gray.200', 'gray.800')} h={"fit-content"}>
         <Box bg={useColorModeValue('teal.400', 'teal.600')} h={"xl"} paddingTop={"50px"}>
-          {display_type === "LogIn" && <Login onChange={(data) => change_type(data) }/>}
-          {display_type === "SignUp" && <Signup onChange={(data) => change_type(data) }/>}
-          {display_type === "Text" && <Welcomming changeType={(data) => change_type(data)}/>}
         </Box>
         <Box as="svg" h={"full"} viewBox="0 0 1440 320" fill={useColorModeValue('teal.400', 'teal.600')} transform={"rotate(180deg)"} zIndex={"-1"} >
           <path
