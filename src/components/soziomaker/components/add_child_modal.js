@@ -18,18 +18,17 @@ import React, { useState } from "react";
 
 export default function AddChildModal(props) {
 
-    const [name, setName] = useState(props.data.name || "");
-    const [age, setAge] = useState(props.data.age || "");
-    const [gender, setGender] = useState(props.data.gender || "");
+    const [name, setName] = useState(props.data?.name || "");
+    const [age, setAge] = useState(props.data?.age || "");
+    const [gender, setGender] = useState(props.data?.gender || "");
     
     function save() {
         const obj = {
-            id: props.data.id || -1,
+            id: props.data?.id || -1,
             name: name,
             age: age,
             gender: gender  
         }
-        console.log(obj)
         close(obj)
     }
 
@@ -51,13 +50,13 @@ export default function AddChildModal(props) {
             <ModalBody pb={6}>
                 <FormControl>
                     <FormLabel>Name</FormLabel>
-                    <Input placeholder='Name' onChange={(e) => setName(e.target.value)} value={name} />
+                    <Input placeholder='Niklas Tewes' onChange={(e) => setName(e.target.value)} value={name} />
                 </FormControl>
   
                 <FormControl mt={4}>
                     <FormLabel>Alter</FormLabel>
                     <NumberInput allowMouseWheel  value={age}>
-                      <NumberInputField onChange={(e) => setAge(e.target.value)}/>
+                      <NumberInputField onChange={(e) => setAge(e.target.value)} placeholder={"3"}/>
                     </NumberInput>
                 </FormControl>
   

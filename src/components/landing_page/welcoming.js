@@ -10,12 +10,8 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useAuth, } from "../../contexts/AuthContext";
-// import { store } from "../../APIs/firebase"
-// import { addDoc, doc, collection, serverTimestamp } from 'firebase/firestore';
-// import cryptoJs from 'crypto-js';
-// import Base64 from 'crypto-js/enc-base64';
-import { useNavigate  } from "react-router-dom";
+import { useAuth, } from "../../contexts/AuthContext"
+import { useNavigate  } from "react-router-dom"
 
 export default function Welcomming(props) {
   const { currentUser } = useAuth()
@@ -25,8 +21,7 @@ export default function Welcomming(props) {
   function change_type(data) {
     props?.changeType(data)
   }
-
-
+  
   return (
     <Box
      w={"100vh"}
@@ -34,6 +29,7 @@ export default function Welcomming(props) {
      borderRadius={"25px"}
      m={"0 auto"}
      p={"25px"}
+     data-testid={"landing_page_welcoming_container"}
     >
       <Center 
         marginBottom={"25px"}

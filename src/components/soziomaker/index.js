@@ -12,26 +12,26 @@ import {
 import { AddIcon, LinkIcon } from '@chakra-ui/icons'
 import Navbar from '../navbar'
 import AddChildModal from './components/add_child_modal';
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import DocumentDrawer from './components/document_drawer';
 import { useDocContext } from '../../contexts/DocumentContext';
 import ChildCard from "./components/child_card"
 import MakeRelations from './components/realtions/make_realtions';
 import { FaWindowRestore } from 'react-icons/fa';
 import SozioGramm from './components/graphical';
-
+import CurrentDocumentCard from "./components/current_document_card"
+import ExportModalSelect from "./components/export/export_modal_select"
+import ExportHandler from './components/export/export_handler';
 
 export default function SozioMaker() {
   const [ modal, showModal ] = useState(false)
   const [ modalData, setModalData ] = useState( );
   const [ makeRelations, showmakeRelations ] = useState(false)
   const [ openDrawer, setOpenDrawer ] = useState(false)
+  const [ openExport, setOpenExport ] = useState(false)
+
   const { getDocuments, currentDocument, updateDocument } = useDocContext();
 
-  console.log("Render")
-  useEffect(() => {
-    console.log("Index onMount")
-  },[])
 
   function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -42,70 +42,17 @@ export default function SozioMaker() {
     return color;
   }
 
-
-  const getChildById = (id) => {
-    for (let index = 0; index < currentDocument.rw_data.Childs.length; index++) {
-        const element = currentDocument.rw_data.Childs[index];
-        if (element.id === id) {
-            return element;
-        }
-    }
-    
-    return null;
-}
-
-  function processGraphicalData() {
-    // first nodes
-    let nodes = []
-    currentDocument.rw_data.Childs.forEach(child => {
-      nodes.push({
-        "id": child.name,
-        "color": child.color       
-      })
-    });
-
-    let links = []
-    currentDocument.rw_data.Relations.forEach(relataion => {
-      let source = getChildById(relataion.ChildId);
-      
-      relataion.affected.forEach(t_id => {
-        let target = getChildById(t_id);
-        links.push({
-          "source": source.name,
-          "target": target.name,
-          "type": "Zuneigung"
-        })
-      }) 
-      relataion.aversion.forEach(t_id => {
-        let target = getChildById(t_id);
-        links.push({
-          "source": source.name,
-          "target": target.name,
-          "type": "Abneigung"
-        })
-      }) 
-    })
-
-    const d = {
-      "nodes": nodes,
-      "links": links
-    }
-    console.log("Datalog: ", d)
-    return d
-  }
-  
-
   function onModalClose(data) {
     showModal(false)
 
     if (data) {
       if (data.id === -1) {
-        data.id = currentDocument.rw_data.Childs.length + 1
+        data.id = currentDocument.getDataByKey("rw_data").Childs.length + 1
         data.color = getRandomColor();
-        currentDocument.rw_data.Childs.push(data)
+        currentDocument.getDataByKey("rw_data").Childs.push(data)
       }
       else {
-        currentDocument.rw_data.Childs.forEach(child => {
+        currentDocument.getDataByKey("rw_data").Childs.forEach(child => {
           if (child.id === data.id) {
            child.name = data.name;
            child.age = data.age;
@@ -145,9 +92,29 @@ export default function SozioMaker() {
   }
 
   function setSVGData(svg) {
-    currentDocument.rw_data.svg = svg.innerHTML;
-    // console.log(currentDocument.rw_data)
+    if (!currentDocument  || !currentDocument.getDataByKey("rw_data"))
+      return;
+    currentDocument.getDataByKey("rw_data").svg = svg.innerHTML;
     updateDocument(currentDocument)
+  }
+
+  function startSaving() {
+    setOpenExport(true)
+  }
+
+  function onExportTypeSelected(type, ref) {
+    if (!type)
+      setOpenExport(false)
+    // hand data to export handler
+    console.log(currentDocument)
+    ExportHandler(currentDocument, type, ref);
+  }
+
+  function onSavingDone(error) {
+    if (error > 1) {
+      //TODO: Toas errors
+    }
+    setOpenExport(false)
   }
 
   return (
@@ -181,7 +148,7 @@ export default function SozioMaker() {
                     borderRadius: '50px',
                   },
                 }}>
-                {currentDocument?.rw_data?.Childs?.map(child => {
+                {currentDocument?.getDataByKey("rw_data")?.Childs?.map(child => {
                   return (
                     <Center key={child.id}>
                       <ChildCard 
@@ -195,7 +162,8 @@ export default function SozioMaker() {
               </Stack>
             </Stack>
             <Box w={"full"} h={"full"}>
-            <SozioGramm data={processGraphicalData()} setSVGData={setSVGData}/>
+            {currentDocument && <CurrentDocumentCard data={currentDocument} onClick={startSaving}/>}
+            <SozioGramm data={currentDocument} setSVGData={setSVGData}/>
               <Stack
                 top={"80%"}
                 zIndex={"2"}
@@ -237,6 +205,8 @@ export default function SozioMaker() {
         {modal && <AddChildModal onClose={(data) => onModalClose(data)} isOpen={modal} data={modalData} />}
         {makeRelations && <MakeRelations onClose={() => onRelationClose()} isOpen={makeRelations} />}
         {(openDrawer || !currentDocument ) && <DocumentDrawer isOpen={(openDrawer || !currentDocument )} onClose={onDocumentDrawerClose} data={getDocuments()}/>}
+        {openExport && <ExportModalSelect isOpen={openExport} onClose={onExportTypeSelected} />}
+        
       </Box>
   );
 }

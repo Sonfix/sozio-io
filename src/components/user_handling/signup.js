@@ -100,6 +100,7 @@ function Signup(props) {
       margin={"0 auto"}
       padding={"5"}
       borderRadius={"25px"}
+      data-testid={"register_page"}
     >
       <Stack
         flexDir="column"

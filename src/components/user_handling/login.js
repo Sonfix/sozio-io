@@ -16,7 +16,7 @@ import {
   IconButton,
   useToast
 } from "@chakra-ui/react";
-import { CloseIcon } from '@chakra-ui/icons'
+import { CloseIcon, EmailIcon } from '@chakra-ui/icons'
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -98,6 +98,7 @@ export default function LogIn(props) {
       borderRadius={"25px"}
       justifyContent="center"
       alignItems="center"
+      data-testid={"login_page"}
     >
      
       <Stack
@@ -136,7 +137,7 @@ export default function LogIn(props) {
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
+                    children={<EmailIcon color="gray.300" />}
                   />
                   <Input type="email" placeholder="E-mail Addresse" ref={emailRef} />
                 </InputGroup>

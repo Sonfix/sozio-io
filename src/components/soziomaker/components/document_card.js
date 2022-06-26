@@ -5,7 +5,6 @@ import {
     Stack,
     useColorModeValue,
   } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
 import { useDocContext } from "../../../contexts/DocumentContext"
   
   export default function DocumentCard(props) {
@@ -13,11 +12,9 @@ import { useDocContext } from "../../../contexts/DocumentContext"
     const { setCurrentDocument } = useDocContext();
 
     function onDocSelected() {
-      console.log(props.id)
       setCurrentDocument(props.id);
       props?.onClick()
     }
-
 
     return (
         <Box
@@ -45,7 +42,7 @@ import { useDocContext } from "../../../contexts/DocumentContext"
   
             <Stack justify={'center'} spacing={6}>
               <Stack spacing={0} align={'center'}>
-                <Text fontWeight={600}>{props.data.title}</Text>
+                <Text fontWeight={600}>{props.data.getDataByKey("title")}</Text>
               </Stack>
             </Stack>
           </Box>

@@ -16,7 +16,7 @@ export default function Content() {
 
     return (
       <Box bg={useColorModeValue('gray.200', 'gray.800')} h={"fit-content"}>
-        <Box bg={useColorModeValue('teal.400', 'teal.600')} h={"xl"} paddingTop={"50px"}>
+        <Box bg={useColorModeValue('teal.400', 'teal.600')} h={"xl"} paddingTop={"50px"} data-testid={"landing_page_main_container"}>
           {display_type === "LogIn" && <Login onChange={(data) => change_type(data) }/>}
           {display_type === "SignUp" && <Signup onChange={(data) => change_type(data) }/>}
           {display_type === "Text" && <Welcomming changeType={(data) => change_type(data)}/>}

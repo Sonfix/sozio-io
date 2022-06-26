@@ -19,13 +19,11 @@ export default function DocumentDrawer(props) {
     const { createDocument, currentDocument } = useDocContext();
 
     function onClose() {
-      console.log(currentDocument)
       props?.onClose()
     }
 
     function onNew() {
       const docRef = createDocument();
-      console.log(docRef);
       onClose();
     }
 
