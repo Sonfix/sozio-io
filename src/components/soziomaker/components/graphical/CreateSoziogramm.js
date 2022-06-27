@@ -116,10 +116,8 @@ export default function CreateSoziogramm(parent, d, forDownload) {
         let width = 600 
         let height = 600
         svg.attr("viewBox",  [-width / 2, -height / 2, width, height])
-        if (forDownload) {
-          svg.attr("xmlns", "http://www.w3.org/2000/svg")
-          svg.attr("version", "1.1")
-        }
+        svg.attr("xmlns", "http://www.w3.org/2000/svg")
+        svg.attr("version", "1.1")
 
         // Per-type markers, as they don't inherit styles.
         svg.append("defs").selectAll("marker")

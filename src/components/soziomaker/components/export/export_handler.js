@@ -1,5 +1,5 @@
 import CreateSoziogramm from "../graphical/CreateSoziogramm";
-import {Page} from '@react-pdf/renderer'
+var PDFDocument = require('pdfkit').default;
 
 class BasicExport {
     constructor(doc) {
@@ -14,6 +14,11 @@ class BasicExport {
 class PDFExport extends BasicExport {
     constructor(doc) {
         super(doc)
+        
+        // create a document and pipe to a blob
+        var doc = new PDFDocument();
+        var stream = doc.pipe(blobStream());
+        doc.registerFont('Roboto', 'fonts/Roboto-Regular.ttf')
     }
 
     export() {

@@ -10,15 +10,35 @@ import {
     Image,
     Text
   } from '@chakra-ui/react'
-import { PDFIcon } from './export_handler';
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 
 export default function ExportModalSelect(props) {
 
+    const [PDFLoading, setPDFLoading] = useState(false)
+    const [JPGLoading, setJPGLoading] = useState(false)
+    const [SVGLoading, setSVGLoading] = useState(false)
+
     const exportRef = useRef()
+    
+    function resolveState(data) {
+      if (data) {
+        if (data === "PDF"){
+          setPDFLoading(data)
+        }
+        else if (data === "JPG"){
+          setJPGLoading(data)
+        }
+        else if (data === "SVG"){
+          setSVGLoading(data)
+        }
+      }
+    }
 
     function close(data) {
+        resolveState(data);
         props?.onClose(data, exportRef)
+        resolveState(false);
+        
     }
 
     return (
@@ -29,7 +49,6 @@ export default function ExportModalSelect(props) {
         >
           <ModalOverlay />
           <ModalContent>
-            <svg ref={exportRef}></svg>
             <ModalHeader>Wie möchtest du es denn gerne haben?</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
@@ -41,6 +60,7 @@ export default function ExportModalSelect(props) {
                         w={"80%"}
                         justifyContent={'flex-start'}
                         onClick={() => close("PDF")}
+                        loading={PDFLoading}
                         leftIcon={<Image
                                     src= {process.env.PUBLIC_URL + '/pdf.svg'}
                                     boxSize='50px'
@@ -58,6 +78,7 @@ export default function ExportModalSelect(props) {
                         w={"80%"}
                         justifyContent={'flex-start'}
                         onClick={() => close("JPG")}
+                        loading={JPGLoading}
                         leftIcon={<Image
                                     src= {process.env.PUBLIC_URL + '/jpg.svg'}
                                     boxSize='50px'
@@ -75,6 +96,7 @@ export default function ExportModalSelect(props) {
                         w={"80%"}
                         justifyContent={'flex-start'}
                         onClick={() => close("SVG")}
+                        loading={SVGLoading}
                         leftIcon={<Image
                                     src= {process.env.PUBLIC_URL + '/svg.svg'}
                                     boxSize='50px'
