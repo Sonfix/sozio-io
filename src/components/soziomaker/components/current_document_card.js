@@ -1,5 +1,4 @@
 import {
-    Image,
     Text,
     Box,
     HStack,
@@ -7,7 +6,6 @@ import {
     Button,
   } from '@chakra-ui/react';
 import { DownloadIcon, } from '@chakra-ui/icons'
-import { useDocContext } from "../../../contexts/DocumentContext"
   
 export default function CurrentDocumentCard(props) {
   

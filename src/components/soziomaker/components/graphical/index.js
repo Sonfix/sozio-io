@@ -10,7 +10,7 @@ export default function SozioGramm(props) {
     }
 
     useEffect(() => {
-      console.log(CreateSoziogramm(chart, data, true))
+      console.log(CreateSoziogramm(chart, data, false))
       console.log(chart)
       setSVGDataCallBack()
     }, [])
@@ -18,6 +18,7 @@ export default function SozioGramm(props) {
   return (
     <svg
         ref={chart}
+        id="graph"
         width={"full"}
         height={"full"}
     />

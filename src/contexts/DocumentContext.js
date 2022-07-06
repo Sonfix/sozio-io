@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react"
-import { addDoc, collection, getDocs,  query, where, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, getDocs,  query, where, updateDoc, deleteDoc } from 'firebase/firestore';
 import { store } from "../APIs/firebase"
 import { useAuth } from "./AuthContext";
 import {Encrypt, Decrypt} from "../components/encryption"
@@ -125,7 +125,6 @@ export function DocumentProvider({ children }) {
     const [currentDocument, setCurrentDoc] = useState(
         new Document().sync(JSON.parse(localStorage.getItem("currentDocument"))) || null
     )
-    const [loading, setLoading] = useState(false)
     let init = false;
 
     const { currentUser } = useAuth();
@@ -164,7 +163,7 @@ export function DocumentProvider({ children }) {
     async function _set_documents() {
         console.log("Start uploading to cloud", Documents)
         Documents.forEach(doc => {
-            if (doc.getChanged()) {       // Don't upload stuff which has not changed. So in most caes we will only upload/update one document per cycle.     
+            if (doc.getChanged() && !doc.getDataByKey("toDelete")) {       // Don't upload stuff which has not changed. So in most caes we will only upload/update one document per cycle.     
                 if(doc.getDataByKey("cnt_id") === "") {
                     // not in firestore upload
                     console.log("Adding to cloud", doc)
@@ -192,7 +191,15 @@ export function DocumentProvider({ children }) {
                 }
                 doc.setChanged(false)
             }
+            else if (doc.getDataByKey("toDelete")) {
+                _deleteDocument(doc)
+            }
         })
+    }
+
+    async function _deleteDocument(doc) {
+        const docRef = doc(store, "diagramms", doc.getDataByKey("cnt_id"))
+        await deleteDoc(docRef);
     }
 
     /**
@@ -265,6 +272,14 @@ export function DocumentProvider({ children }) {
         }
     }
 
+    function deleteDocument(id) {
+        // the id will be the current index within the Documents Array
+        let doc = getDocument(id)
+        doc.addData("toDelete", true).setChanged(true)
+        init = false;
+        Sync()
+    }
+
     useEffect(() => {
         Sync()
     }, [])
@@ -276,11 +291,12 @@ export function DocumentProvider({ children }) {
         createDocument,
         setCurrentDocument,
         updateDocument,
+        deleteDocument,
     }
 
    return(
         <DocumentContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </DocumentContext.Provider>
     );
 }

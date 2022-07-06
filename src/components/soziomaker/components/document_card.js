@@ -4,7 +4,10 @@ import {
     Text,
     Stack,
     useColorModeValue,
+    Flex,
+    IconButton
   } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons'
 import { useDocContext } from "../../../contexts/DocumentContext"
   
   export default function DocumentCard(props) {
@@ -14,6 +17,11 @@ import { useDocContext } from "../../../contexts/DocumentContext"
     function onDocSelected() {
       setCurrentDocument(props.id);
       props?.onClick()
+    }
+
+    function onDeleteClicked(e) {
+      e.stopPropagation()
+      props?.deleteDocument(props.id)
     }
 
     return (
@@ -28,7 +36,7 @@ import { useDocContext } from "../../../contexts/DocumentContext"
           _hover={{
             cursor: "pointer"
           }}>
-  
+ 
           <Box p={6}>
             <Stack spacing={0} align={'center'} mb={5}>
               <Image
@@ -42,8 +50,18 @@ import { useDocContext } from "../../../contexts/DocumentContext"
   
             <Stack justify={'center'} spacing={6}>
               <Stack spacing={0} align={'center'}>
-                <Text fontWeight={600}>{props.data.getDataByKey("title")}</Text>
+                <Text fontWeight={600}>{props.data.getDataByKey("title")}</Text> 
+                <Flex justifyContent={"flex-end"} m={"6px"}>
+                  <IconButton 
+                    colorScheme='red'
+                    aria-label='Löschen'
+                    size={"sm"}
+                    icon={<DeleteIcon />}
+                    onClick={onDeleteClicked}
+                  />
+                </Flex>
               </Stack>
+              
             </Stack>
           </Box>
         </Box>

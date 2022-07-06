@@ -12,7 +12,7 @@ import {
 import { AddIcon, LinkIcon } from '@chakra-ui/icons'
 import Navbar from '../navbar'
 import AddChildModal from './components/add_child_modal';
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import DocumentDrawer from './components/document_drawer';
 import { useDocContext } from '../../contexts/DocumentContext';
 import ChildCard from "./components/child_card"
@@ -71,6 +71,7 @@ export default function SozioMaker() {
   }
 
   function onClick(child) {
+    console.log("Card clicked")
     setModalData(child)
     showModal(true)
   }
@@ -94,7 +95,7 @@ export default function SozioMaker() {
   function setSVGData(svg) {
     if (!currentDocument  || !currentDocument.getDataByKey("rw_data"))
       return;
-    currentDocument.getDataByKey("rw_data").svg = svg.innerHTML;
+    currentDocument.getDataByKey("rw_data").svg = svg.outerHTML;
     updateDocument(currentDocument)
   }
 
@@ -107,14 +108,35 @@ export default function SozioMaker() {
       setOpenExport(false)
     // hand data to export handler
     console.log(currentDocument)
-    ExportHandler(currentDocument, type, ref);
+    ExportHandler(currentDocument, type, onSavingDone);
   }
 
   function onSavingDone(error) {
+    console.log("Done")
     if (error > 1) {
-      //TODO: Toas errors
+      console.log(error)
     }
     setOpenExport(false)
+  }
+
+  function onChildDelete(child) {
+    // getting index of child
+      const getChildIndex = (doc, id) => {
+        for (let index = 0; index < doc.getDataByKey("rw_data").Childs.length; index++) {
+            const element = doc.getDataByKey("rw_data").Childs[index];
+            if (element.id === id) {
+                return index;
+            }
+        }
+        
+        return -1;
+    }
+    const index = getChildIndex(currentDocument, child)
+    if (index >= 0) {
+        let oData = currentDocument.getDataByKey("rw_data");
+        oData.Childs.splice(index)
+        currentDocument.updateData("rw_data", oData)
+    }
   }
 
   return (
@@ -127,7 +149,7 @@ export default function SozioMaker() {
           >
             <Stack w={"25%"} h={"full"} bg={useColorModeValue('gray.200', 'gray.800')} minW={"300px"}>
               <Center>
-                <Heading marginTop={"5px"} onClick={() => onOpenDrawerClick()}>Kinder</Heading>
+                <Heading marginTop={"5px"} onClick={() => console.log(currentDocument)}>Kinder</Heading>
               </Center>
               <Center>
                 <Divider borderColor={"gray.500"} orientation='horizontal' m={"0 auto"} w={"90%"}/>
@@ -155,6 +177,7 @@ export default function SozioMaker() {
                         key={child.id} 
                         data={child}
                         onClick={() => onClick(child)}
+                        DeleteClicked={onChildDelete}
                       />
                     </Center>
                   )

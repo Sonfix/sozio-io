@@ -17,10 +17,9 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { CloseIcon, EmailIcon } from '@chakra-ui/icons'
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
-const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 function CheckResp(err, id) {

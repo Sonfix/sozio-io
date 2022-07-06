@@ -1,20 +1,15 @@
 import React from "react"
-import { Route, Navigate, useLocation } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 
-export default function PrivateRoute({ component: Component, ...rest }) {
+export default function PrivateRoute() {
   const { currentUser } = useAuth()
-  let location = useLocation();
 
   return (
-    <Route
-      {...rest}
-      render={props => {
-        return currentUser ? <Component {...props} /> : <Navigate to={{
-            pathname: "/",
-            state: { from: location }
-        }} />
-      }}
-    ></Route>
-  )
+    // Show the component only when the user is logged in
+    // Otherwise, redirect the user to /signin page
+    currentUser ?
+            <Outlet/>
+        : <Navigate to="/signin" />
+  );
 }

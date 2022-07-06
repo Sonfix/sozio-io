@@ -6,10 +6,18 @@ import {
     Stack,
     useColorModeValue,
     Avatar,
+    Flex,
+    IconButton
   } from '@chakra-ui/react';
+  import { DeleteIcon } from '@chakra-ui/icons'
 
  
   export default function ChildCard(props) {
+
+    function onDeleteClicked(e) {
+      console.log("Delete clicked")
+      e.stopPropagation()
+    }
 
     return (
       <Center 
@@ -30,6 +38,15 @@ import {
           >
   
           <Box p={6}>
+            <Flex justifyContent={"flex-end"} m={"6px"}>
+              <IconButton 
+                colorScheme='red'
+                aria-label='Löschen'
+                size={"sm"}
+                icon={<DeleteIcon />}
+                onClick={onDeleteClicked}
+              />
+            </Flex>
             <Center>
               <Avatar size={"lg"} bg={props.data.color}/>
             </Center>

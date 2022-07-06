@@ -16,15 +16,19 @@ import { useDocContext } from '../../../contexts/DocumentContext';
 
 export default function DocumentDrawer(props) {
 
-    const { createDocument, currentDocument } = useDocContext();
+    const { createDocument, deleteDocument } = useDocContext();
 
     function onClose() {
       props?.onClose()
     }
 
     function onNew() {
-      const docRef = createDocument();
+      createDocument();
       onClose();
+    }
+
+    function onDeleteDocument(id) {
+      deleteDocument(id)
     }
 
     let cnt = 0;
@@ -47,7 +51,7 @@ export default function DocumentDrawer(props) {
               {props?.data?.length && 
               props?.data.map(doc => {
                       return (
-                        <DocumentCard key={cnt} data={doc} id={cnt++} onClick={onClose}/>
+                        <DocumentCard key={cnt} data={doc} id={cnt++} onClick={onClose} deleteDocument={onDeleteDocument}/>
                       )
                   })              
               }

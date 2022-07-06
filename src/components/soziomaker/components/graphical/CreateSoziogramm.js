@@ -1,24 +1,26 @@
 import * as d3 from 'd3';
 
-const types = ["Zuneigung","Abneigung", "GgsZuneigung", "GgsAbneigung", "Neutral"];
+const types = ["Zuneigung","Abneigung", "Neutral"];
 
 
 const drag = simulation => {
   
-    function dragstarted(event, d) {
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-    
-    function dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
-    
-    function dragended(event, d) { 
-      d.fx = null;
-      d.fy = null;
-    }
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+  
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+  
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
     
     return d3.drag()
         .on("start", dragstarted)
@@ -109,7 +111,7 @@ export default function CreateSoziogramm(parent, d, forDownload) {
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id))
-            .force("charge", d3.forceManyBody().strength(-1000).distanceMin(200).distanceMax(1000))
+            .force("charge", d3.forceManyBody().strength(-10000).distanceMin(200).distanceMax(1000))
             .force("x", d3.forceX())
             .force("y", d3.forceY());
 
@@ -124,7 +126,7 @@ export default function CreateSoziogramm(parent, d, forDownload) {
         .data(types)
         .join("marker")
             .attr("id", d => `arrow-${d}`)
-            .attr("viewBox", "0 -5 16 16")
+            .attr("viewBox", "0 -5 10 10")
             .attr("refX", 15)
             .attr("refY", -0.5)
             .attr("markerWidth", 6)

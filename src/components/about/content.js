@@ -2,9 +2,7 @@ import {
     Box,
     useColorModeValue,
     Flex,
-    HStack,
   } from '@chakra-ui/react';
-import { useState } from "react";
 import Textcard from './text_card';
 
 export default function Content() {

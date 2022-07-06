@@ -4,7 +4,6 @@ import {
     HStack,
  } from '@chakra-ui/react'
 import CustomRadio from "./custom_radio_element"
-import { useState } from "react"
 
 export default function VotingElement(props) {
     const options = ['Neutral', 'Zuneigung', 'Abneigung']
